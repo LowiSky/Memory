@@ -1,11 +1,11 @@
-/* ----------------------------------- *\
+﻿/* ----------------------------------- *\
                 Variables
 \* ----------------------------------- */
-	
+        
     // Variables de configuration
 
-    	var level = false; // Difficulté
-    	var players = 1; // Nombre de joueurs (Max 2)
+            var level = false; // Difficulté
+            var players = 1; // Nombre de joueurs (Max 2)
         var array= []; // Tableau avec les indices par carte (voir genererTableau)
 
     // HTML elements
@@ -30,11 +30,17 @@
 
         // Jeu
         var nb_cliques = 0;
-        var carte_1;
-        var carte_2;
+        var carte_1_valeur = 0;
+        var carte_2_valeur = 0;
+        var carte_1_id = 0;
+        var carte_2_id = 0;
+        var paire_trouvee = false;
 
-        // Compteur Paires
+        // Compteur Paires & Tours
         var paires = 0;
+        var tours = 0;
+        var score_page = document.getElementById('tours_joues');
+        var paires_page = document.getElementById('paires_trouvees');
 
 
 
@@ -198,7 +204,7 @@
                 carte.appendChild(contenu_carte); // On ajoute le contenu à la carte
                 carte.style.width = carte_width; // On lui met la hhauteur et la largeur choisi auparavant
                 carte.style.height = carte_height;
-                carte.setAttribute('onclick', 'jeu(this.id)');
+                carte.setAttribute('onclick', 'cliqueCarte(this.id)');
                 carte.setAttribute('id', i);
                 game_page.lastChild.appendChild(carte); // On ajoute la carte à la dernière ligne du deck
 
@@ -222,50 +228,112 @@
                    Jeu
 \* ----------------------------------- */
 
-    function jeu(id_carte){ // 
-       
 
-       // Première carte retournée
-        if(nb_cliques == 0){
-            carte_1 = array[id_carte]; // On enregistre la valeur de la carte 1
-            alert('Carte 1');
+    // Fonction executée à chaque clique sur une carte
+    function cliqueCarte(id_carte){ // 
 
-            var carte_selectionee = document.getElementById(id_carte);
-            var carte_valeur = document.createTextNode(carte_1);
-            carte_selectionee.firstChild.appendChild(carte_valeur);
-        }
-
-        // Seconde carte retournée
+       // Seconde carte retournée
         if(nb_cliques == 1){
 
-            nb_cliques = 0; // On remet à zéro pour re-retourner deux nouvelles cartes
-            carte_2 = array[id_carte];
-            alert('Carte 2');
+            // Variables à modifier
+            carte_2_valeur = array[id_carte]; // On enregistre la valeur de la carte 2
+            carte_2_id = id_carte; // On enregistre l'id de la carte 2
 
-            var carte_selectionee = document.getElementById(id_carte);
-            var carte_valeur = document.createTextNode(carte_2);
-            carte_selectionee.firstChild.appendChild(carte_valeur);
+            if(carte_2_id != carte_1_id){
+                
+                // On remet à zéro pour re-retourner deux nouvelles cartes
+                nb_cliques = 0; 
 
-            if(carte_1 == carte_2){
-                 
-                // Tu appel la fonction compteurPaires
-                // Tu retourne les paires
-		        function (compteurPaires);
-		
+                // On retourne la carte
+                carteFVisible(carte_2_id, carte_2_valeur); // On retourne la carte
+
+                if(carte_1_valeur == carte_2_valeur){
+                     
+                    // On dit qu la paire est trouvée pour qu'elle ne soit pas retourné au tour suivant
+                    paire_trouvee = true;
+
+                    // Désactive la possibilité de cliquer pour ces deux cartes (car déjà trouvées)
+                    carte_1 = document.getElementById(carte_1_id);
+                    carte_1.removeAttribute('onclick');
+                    carte_1.setAttribute('class', 'found'); // On lui ajoute le style d'une carte trouvée
+
+                    carte_2 = document.getElementById(carte_2_id);
+                    carte_2.removeAttribute('onclick');
+                    carte_2.setAttribute('class', 'found'); // On lui ajoute le style d'une carte trouvée
+
+                    // Appel la fonction compteurPaires
+                    compteurPaires();
+
+                }
             }
         }
 
-        nb_cliques++;
+
+        // Première carte retournée
+        else if(nb_cliques == 0){
+
+            // On remet face cachée les cartes précedement retournées
+            if(paire_trouvee == false){
+                carteFCachee(carte_1_id, carte_2_id);
+            }
+            else{ // Paire trouvée au tour précedant
+                paire_trouvee = false; // On réinitialise pour le nouveau tour
+            }
+
+            // On ajoute 1 Tour
+            compteurTours();
+
+
+            // Variables à modifier
+            carte_1_valeur = array[id_carte]; // On enregistre la valeur de la carte 1
+            carte_1_id = id_carte; // On enregistre l'id de la carte 1
+
+            // On retorune la carte
+            carteFVisible(carte_1_id, carte_1_valeur); // On retourne la carte
+
+            nb_cliques++; // On incrémente le nb de clique, car on est au deuxième clique
+
+        }  
         
     }
 
 
     function compteurPaires(){
-        // Incrémentation de la variable compteur
-	
-	    paires++;
+        // On incrémente le nombre de paires
+        paires++;
+
+        // On met à jour l'affichage
+        paires_page.innerHTML = paires;
+		
+
+    function compteurTours(){
+        // On incrémente le nombre de tours
+        tours++;
+
+        // On met à jour l'affichage
+        score_page.innerHTML = tours;
+    }
+
+    // Fonction qui retourne une carte face visible
+    function carteFVisible(id_carte, valeur_carte){
+
+        var carte_selectionee = document.getElementById(id_carte); // On sélectionne la carte a retourner
+        var carte_texte = document.createTextNode(valeur_carte); // On créer le texte comprenant la valeur de la carte
+        carte_selectionee.firstChild.appendChild(carte_texte); // On ajoute le texte à la carte à retourner (variable 1)
 
     }
+
+    // Fonction qui retourne une carte face cachée
+    function carteFCachee(carte_1_id, carte_2_id){
+
+        var carte_1 = document.getElementById(carte_1_id); // On sélectionne la carte a retourner
+        carte_1.firstChild.innerHTML = ''; // On lui met un contenu nul
+
+        var carte_2 = document.getElementById(carte_2_id); // On sélectionne la carte a retourner
+        carte_2.firstChild.innerHTML = ''; // On lui met un contenu nul
+    }
+
+
 
 
 
@@ -301,11 +369,11 @@
 // Fonction qui permet de mélanger des tableaux
 function melangeTableau(array) {
 
-	// 	Variables : 	
-	//		c = compteur, pour parcourire le tableau
-	//		temp = temporaire, pour stocker une valeur du tableau temporairement
-	//		indice, un index du tableau choisi au hasard
-	
+        //         Variables :         
+        //                c = compteur, pour parcourire le tableau
+        //                temp = temporaire, pour stocker une valeur du tableau temporairement
+        //                indice, un index du tableau choisi au hasard
+        
 
     var c = array.length; // c vaut la taille du tableau
     var temp;
@@ -331,6 +399,18 @@ function melangeTableau(array) {
     return array;
 }
 
+
+// Fonction chronomètre
+function chronometre(){
+    var i = 0;
+
+    var timer = setInterval(function() {
+        i++;
+        console.log(i);
+    }, 1000);
+}
+
+chronometre();
 
 
 

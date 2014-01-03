@@ -39,8 +39,13 @@
         // Compteur Paires & Tours
         var paires = 0;
         var tours = 0;
+        var temps = 0;
         var score_page = document.getElementById('tours_joues');
         var paires_page = document.getElementById('paires_trouvees');
+        var temps_page = document.getElementById('temps_ecoule');
+
+        // Victoire
+        var win = false;
 
 
 
@@ -221,6 +226,25 @@
         }
 
 
+/* ----------------------------------- *\
+         Execution Initialisation
+\* ----------------------------------- */
+
+    // Executions de toutes les fonctions en callback
+
+       choixLevel(function() {
+            choixJoueurs(function() {
+                afficherParametres(function() {
+                    genererTableau(function() {
+                        genererCartes(function() {
+                            chronometre();
+                        });
+                    });
+                });
+            });
+        });
+
+
 
 
 
@@ -298,12 +322,36 @@
     }
 
 
+    // Fonction qui compte les paires trouvées et determine si le joueur a gagné
     function compteurPaires(){
         // On incrémente le nombre de paires
         paires++;
 
         // On met à jour l'affichage
         paires_page.innerHTML = paires;
+
+
+        // On reload en fonction du nombre de paires gagnée (en fonctions de la difficulté)
+        switch (level){
+            case "Facile":
+                if (paires == 8){  // si toutes les paires on été trouvées,
+                    win = true;
+                    affichageScoreboard();
+                }
+                break;
+            case "Moyen":
+                if (paires == 21){
+                    win = true;
+                    affichageScoreboard();
+                }
+                break;
+            case "Difficile":
+                if (paires == 56){
+                    win = true;
+                    affichageScoreboard();
+                }
+                break;
+        }
     }
 
     function compteurTours(){
@@ -334,31 +382,43 @@
     }
 
 
-
-
-
-
-
-
 /* ----------------------------------- *\
-            Execution finale
+                Resultats
 \* ----------------------------------- */
 
-    // Executions de toutes les fonctions en callback
+    // Fonction affichant le tableau des résultats
+    function affichageScoreboard(){
 
-       choixLevel(function() {
-            choixJoueurs(function() {
-                afficherParametres(function() {
-                    genererTableau(function() {
-                        genererCartes(function() {
-                            /*jeu(function() {
+        // Variables
+        var scoreboard_page = document.getElementById('scoreboard');
+        var score = document.getElementById('score_input');
+        var facteur_difficulte = 1;
 
-                            });*/
-                        });
-                    });
-                });
-            });
-        });
+        switch (level){
+            case "Facile":
+                facteur_difficulte = 1;
+                break;
+            case "Moyen":
+                facteur_difficulte = 10;
+                break;
+            case "Difficile":
+                facteur_difficulte = 100;
+                break;
+        }
+
+        var resultat = Math.round(((((facteur_difficulte)/(tours))*100) - temps)*1000); // Calcul du resultat
+        if(resultat < 0){ resultat = 0 }
+
+        score.innerHTML = resultat;
+        scoreboard_page.style.display = "block";
+
+        reload_button.onclick = function(){
+            reloadGame();
+        }
+    }
+
+
+
 
 
 /* ----------------------------------- *\
@@ -383,7 +443,7 @@ function melangeTableau(array) {
     while (c > 0) {
 
         // On choisit un indice au hasard. 
-        // (random choisi un nombre entre 0 et 1 (non-inclu), il est multiplié par l'indice actuellement sélectionné, puis arrondi grâce à floor)
+        // (random choisi un nombre entre 0 et 1 (non-inclu) (= random), il est multiplié par l'indice actuellement sélectionné, puis arrondi grâce à floor)
         indice = Math.floor(Math.random() * c);
 
         // On passe à l'indice précedant
@@ -400,6 +460,24 @@ function melangeTableau(array) {
 }
 
 
+// Fonction chronomètre
+function chronometre(){
+    var i = 0;
+
+    var timer = setInterval(function() {
+        // On incrémente le compteur de secondes
+        i++;
+
+        // On rafraichi l'affichage
+        temps_page.innerHTML = i;
+
+        // On arrête le chrono en cas de victoire
+        if(win == true){
+            clearInterval(timer); // On arrête
+            temps = i; // On enregistre le temps
+        }
+    }, 1000);
+}
 
 
 
