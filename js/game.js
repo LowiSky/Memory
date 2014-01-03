@@ -33,7 +33,7 @@
 
 
 /* ----------------------------------- *\
-                Algorithme
+              Initialisation
 \* ----------------------------------- */
 
 
@@ -74,12 +74,12 @@
                 callback();
             }
 
-            // Clique sur le bouton "Deux Joueurs"
-            button_2_player.onclick = function(){
+            // Clique sur le bouton "Deux Joueurs" (Indisponible)
+            /*  button_2_player.onclick = function(){
                 players = 2;
                 supprimerDiv(players_page);
                 callback();
-            }
+            } */
         }
 
 
@@ -209,6 +209,23 @@
 
 
 
+/* ----------------------------------- *\
+                   Jeu
+\* ----------------------------------- */
+
+    function jeu(callback){
+
+
+
+    }
+
+
+
+
+/* ----------------------------------- *\
+            Execution finale
+\* ----------------------------------- */
+
     // Executions de toutes les fonctions en callback
 
        choixLevel(function() {
@@ -216,16 +233,14 @@
                 afficherParametres(function() {
                     genererTableau(function() {
                         genererCartes(function() {
+                            jeu(function() {
 
+                            });
                         });
                     });
                 });
             });
         });
-
-
-
-
 
 
 /* ----------------------------------- *\
