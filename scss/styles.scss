@@ -17,6 +17,7 @@
 $bg_color: #000;
 $p_color: #242424;
 $td_color: #C9C5C7;
+$td_color_h: #DEDEDE;
 $body_font: 'Source Sans Pro';
 $level_color: #fff;
 $level_color_h: #5c717e;
@@ -172,8 +173,41 @@ body{
 		@include single-box-shadow(#2e2e2e, 0, 0, 3px);
 	}
 
+	.found{
+		background-color: $td_color_h;
+		color: white;
+	}
+
+	.found:hover{
+		background-color: $td_color_h;
+		@include single-box-shadow(#2e2e2e, 0, 0, 0);
+	}
+
 	table{
 		margin: auto;
 	}
 
+}
+
+#score{
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	@include box-sizing(border-box);
+	padding-right: 20px;
+	padding-left: 40px;
+	background-color: $nav_color;
+	height: 73px;
+	color: white;
+	text-align: right;
+	z-index: 9;
+
+	span{
+		display: block;
+	}
+
+	.hidden{
+		display: inline-block;
+		opacity: 0;
+	}
 }
