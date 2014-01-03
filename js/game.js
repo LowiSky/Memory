@@ -6,6 +6,7 @@
 
     	var level = false; // Difficulté
     	var players = 1; // Nombre de joueurs (Max 2)
+        var array= []; // Tableau avec les indices par carte (voir genererTableau)
 
     // HTML elements
 
@@ -22,6 +23,10 @@
 
         // Paramètres
         var nav_page = document.getElementById('nav');
+
+        // Génération des cartes
+        var game_page = document.getElementById('deck')
+        var cartes = document.getElementsByTagName('td');
 
 
 
@@ -106,8 +111,7 @@
 
     // Générer le tableau
 
-        function genererTableau(){
-            var array = []; // Tableau avec les valeurs
+        function genererTableau(callback){
             var array_length; // Taille du tableau en fct de la difficulté
             var j = 0; // Chiffre à ajouter dans le tableau (voir remplissage du tableau)
 
@@ -118,10 +122,10 @@
                     array_length = 16; // En facile, il faudra deviner 16 cartes (4*4)
                     break;
                 case "Moyen":
-                    array_length = 42; // En moyen, il faudra deviner 36 cartes (6*6)
+                    array_length = 42; // En moyen, il faudra deviner 42 cartes (6*7)
                     break;
                 case "Difficile":
-                    array_length = 100; // En Difficile, il faudra deviner 100 cartes (10*10)
+                    array_length = 112; // En Difficile, il faudra deviner 100 cartes (10*10)
                     break;
                 default:
                     array_length = 16; // Par défaut on met en facile au cas-où
@@ -138,7 +142,67 @@
             // Mélange du tableau
             melangeTableau(array);
 
-            alert(array+'\n\n'+array.length);
+            callback();
+        }
+
+
+    // Générer les cartes en HTML
+
+        function genererCartes(callback){
+
+            var carte_width = 0;
+            var carte_height = 0;
+
+            // On défini le nombre de cartes par lignes en fonction de la difficulté, et la taille des cartes (plus elles sont nombreuses plus elles sont petites)
+            var largeurDeck;
+            switch (level){
+                case "Facile":
+                    largeurDeck = 4;
+                    carte_width = '100px';
+                    carte_height = '140px';
+                    break;
+                case "Moyen":
+                    largeurDeck = 7;
+                    carte_width = '70px';
+                    carte_height = '90px';
+                    break;
+                case "Difficile":
+                    largeurDeck = 16;
+                    carte_width = '50px';
+                    carte_height = '75px';
+                    break;
+            }
+
+
+            // On parcours le tableau en allant de 0 à c (la taille du tableau)
+            for(var i = 0, c = array.length, j = 0; i < c; i++){
+                
+                // Pour créer une nouvelle ligne (voir en bas)
+                if(j==0){
+                    var ligne = document.createElement('tr');
+                    game_page.appendChild(ligne);
+                }
+
+                // Pour créer une carte
+                var carte = document.createElement('td'); // La cellule du tableau
+                var contenu_carte = document.createElement('p'); // Son contenu
+
+                contenu_carte.innerHTML = i; // Le contenu est la valeur de l'indice
+                carte.appendChild(contenu_carte); // On ajoute le contenu à la carte
+                carte.style.width = carte_width;
+                carte.style.height = carte_height;
+                game_page.lastChild.appendChild(carte); // On ajoute la carte à la dernière ligne du deck
+
+                // On souhaite réaliser des lignes de "largeurDeck" cartes, donc j augmente jusqu'à atteindre cette valeur, on insère alors une nouvelle ligne (voir en haut)
+                j++;
+                if(j == largeurDeck){
+                    j = 0;
+                }
+            }
+
+
+
+            callback();
         }
 
 
@@ -150,8 +214,10 @@
        choixLevel(function() {
             choixJoueurs(function() {
                 afficherParametres(function() {
-                    genererTableau(function(){
+                    genererTableau(function() {
+                        genererCartes(function() {
 
+                        });
                     });
                 });
             });

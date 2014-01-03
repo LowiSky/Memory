@@ -16,8 +16,6 @@
 
 $bg_color: #000;
 $p_color: #242424;
-$td_size_w: 100px;
-$td_size_h: 150px;
 $td_color: #C9C5C7;
 $body_font: 'Source Sans Pro';
 $level_color: #fff;
@@ -96,14 +94,6 @@ body{
 	}
 }
 
-#img_logo{
-	width: 300px;
-	position: absolute;
-	z-index: 9;
-	bottom: 30px;
-	left: 30px;
-}
-
 #level{
 	@include box-sizing(border-box);
 	padding-top: 10%;
@@ -150,22 +140,30 @@ body{
 
 #game{
 
-	margin-top: 60px;
+	position: absolute;
+	top: 60px; left: 0; right: 0;
 	@include box-sizing(border-box);
+	z-index: 2;
+	text-align: center;
+
+	#deck{
+		display: inline-block;
+		vertical-align: middle;
+		position: relative;
+		top: 60px;
+	}
 
 	td{
-		width: $td_size_w;
-		height: $td_size_h;
 		background-color: $td_color;
 		display: inline-block;
 		margin-right: 7px;
 		margin-top: 5px;
 		@include border-radius(2px);
+		@include box-sizing(border-box);
 
 		p{
 			font-family: $body_font, Arial;
 			text-align: center;
-			line-height: 120px;
 		}
 	}
 
