@@ -1,0 +1,181 @@
+/* ----------------------------------- *\
+                Imports
+\* ----------------------------------- */
+
+@import "compass";
+@import "compass/css3";
+
+@import "fonts";
+
+
+
+
+/* ----------------------------------- *\
+                Variables
+\* ----------------------------------- */
+
+$bg_color: #000;
+$p_color: #242424;
+$td_size_w: 100px;
+$td_size_h: 150px;
+$td_color: #C9C5C7;
+$body_font: 'Source Sans Pro';
+$level_color: #fff;
+$level_color_h: #5c717e;
+$nav_color: #8AA1AF;
+$h1_color: #fff;
+
+
+
+
+/* ----------------------------------- *\
+                  Mixin
+\* ----------------------------------- */
+
+@mixin menu_button(){
+	display: inline-block;
+	width: 150px;
+	margin-top: 20px;
+	height: 50px;
+	background-color: $nav_color;
+	color: $level_color;
+	line-height: 50px;
+	margin-right: 20px;
+}
+
+
+
+/* ----------------------------------- *\
+                  SCSS
+\* ----------------------------------- */
+
+
+body{
+	color: $p_color;
+	font-family: $body_font, Arial;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+}
+
+#nav{
+	width: 100%;
+	height: 60px;
+	background-color: $nav_color;
+	z-index: 10;
+	position: absolute;
+	top: 0; left: 0; right: 0;
+	@include box-sizing(box-box);
+	padding-left: 20px;
+
+	h1{
+		color: $h1_color;
+		font-size: 20px;
+		line-height: 35px;
+		width: 300px;
+		display: inline-block;
+	}
+
+	h1:hover{
+		cursor: pointer;
+	}
+
+	#settings{
+		display: inline-block;
+		float: right;
+		position: absolute;
+		right: 40px;
+		line-height: 28px;
+		color: $h1_color;
+
+		.setting{
+			position: relative;
+			margin-right: 20px;
+			margin-left: 20px;
+		}
+	}
+}
+
+#img_logo{
+	width: 300px;
+	position: absolute;
+	z-index: 9;
+	bottom: 30px;
+	left: 30px;
+}
+
+#level{
+	@include box-sizing(box-box);
+	padding-top: 10%;
+	text-align: center;
+	position: absolute;
+	top: 60px; bottom: 0; left: 0; right: 0;
+	background-color: #fff;
+	z-index: 6;
+
+	.level_button{
+		@include menu_button();
+	}
+
+	.level_button:hover{
+		background-color: $level_color_h;
+		cursor: pointer;
+	}
+}
+
+
+#players{
+	@include box-sizing(box-box);
+	padding-top: 10%;
+	position: absolute;
+	top: 60px; bottom: 0; left: 0; right: 0;
+	background-color: #fff;
+	z-index: 5;
+	text-align: center;
+
+	.player_button{
+		@include menu_button();
+	}
+
+	.player_button:hover{
+		background-color: $level_color_h;
+		cursor: pointer;
+	}
+
+	#button_2_players:hover{
+		background-color: #9F9FA6;
+		cursor: auto;
+	}
+}
+
+#game{
+
+	margin-top: 60px;
+	@include box-sizing(border-box);
+
+	td{
+		width: $td_size_w;
+		height: $td_size_h;
+		background-color: $td_color;
+		display: inline-block;
+		margin-right: 7px;
+		margin-top: 5px;
+		@include border-radius(2px);
+
+		p{
+			font-family: $body_font, Arial;
+			text-align: center;
+			line-height: 120px;
+		}
+	}
+
+	td:hover{
+		cursor: pointer;
+		@include single-box-shadow(#2e2e2e, 0, 0, 3px);
+	}
+
+	table{
+		margin: auto;
+	}
+
+}
